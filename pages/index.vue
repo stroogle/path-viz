@@ -1,14 +1,20 @@
 <template>
     <div class="flex gap-4 h-full">
         <div class="flex-grow h-full bg-background rounded-md shadow-lg p-4 flex flex-col">
-            <div v-for="(row, row_index) in maze.get_nodes()" class="flex">
-                <!-- <div v-for="column in 20" class="w-[30px] h-[30px] bg-blue-500 hover:bg-red-500"></div> -->
+            <GridDisplay 
+                :column_count="column_count"
+                :row_count="row_count"
+                :cell_size="CELL_SIZE"
+                :gap_size="GRID_GAP"
+                ref="grid_display"
+            />
+            <!-- <div v-for="(row, row_index) in maze.get_nodes()" class="flex">
                 <Cell
                     v-for="(column, col_index) in row"
                     state="active"
                     @click="setWall(row_index, col_index)"
                 />
-            </div>
+            </div> -->
         </div>
         <div class="max-w-[300px] w-1/4 bg-background h-full flex gap-4 flex-col p-4 rounded-md shadow-lg">
             <Button @click="() => {colorMode.preference = 'light'}">
@@ -76,6 +82,18 @@ arr[2][2] = "end"
 function setWall(row: number, col: number) {
     arr[row][col] = "wall"
 }
+
+let grid_display = useTemplateRef("grid_display");
+let {width, height} = useElementSize(grid_display);
+const GRID_GAP = 2;
+const CELL_SIZE = 25;
+let column_count = ref(0);
+let row_count = ref(0);
+
+watchEffect(() => {
+    column_count.value = Math.floor((width.value - GRID_GAP) / (CELL_SIZE + GRID_GAP))
+    row_count.value = Math.floor((height.value - GRID_GAP) / (CELL_SIZE + GRID_GAP))
+})
 
 </script>
 
