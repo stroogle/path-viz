@@ -1,35 +1,57 @@
-import {Node} from "./node.js"
+import Node from "~/utils/node"
 
-export class Graph {
+export default class Graph {
 
-    private width: number;
-    private height: number;
-    private nodes: Node[][];
+    nodes: Node[];
+    height: number;
+    width: number;
 
-    /**
-     * This creates a square graph.
-     * @param width The width of the graph. Bound to [10, 100]
-     * @param height The height of the graph. Boung to [10, 100]
-     */
-    constructor(width: number, height: number) {
-        // Prevents the graph from being smaller than 10x10 or bigger than 100x100
-        this.width = Math.max(10, width);
-        this.height = Math.max(10, height);
-        this.width = Math.min(100, this.width);
-        this.height = Math.min(100, this.height);
-
-        this.nodes = [];
-
-        for(let i = 0; i < this.height; i++) {
-            this.nodes.push([]);
-            for(let j = 0; j < this.width; j++) {
-                this.nodes[i].push(new Node());
-            }
-        }
+    constructor(nodes: Node[], height: number, width: number) {
+        this.nodes = nodes;
+        this.height = height;
+        this.width = width;
     }
 
-    get_nodes(): Node[][] {
-        return this.nodes;
+    public get_node(node_index: any): Node {
+        return this.nodes[node_index];
     }
+
+    public get_node_neighbours(node_index: number): number[] {
+        let res: number[] = [];
+
+        let left = this.get_node_left(node_index);
+        let down = this.get_node_below(node_index);
+        let right = this.get_node_right(node_index);
+        let up = this.get_node_above(node_index);
+
+        if(left) res.push(left);
+        if(down) res.push(down);
+        if(right) res.push(right);
+        if(up) res.push(up);
+
+        return res;
+    }
+
+    private get_node_above(node_index: number): number | undefined {
+        if(node_index - this.width < 0) return undefined
+        return node_index - this.width;
+    }
+
+    private get_node_right(node_index: number): number | undefined {
+        if((node_index + 1) % this.width == 0) return undefined
+        return node_index + 1;
+    }
+
+    private get_node_below(node_index: number): number | undefined {
+        if(node_index + this.width >= this.nodes.length) return undefined
+        return node_index + this.width;
+    }
+
+    private get_node_left(node_index: number): number | undefined {
+        if(node_index % (this.width) == 0) return undefined
+        return node_index - 1;
+    }
+
+    
 
 }

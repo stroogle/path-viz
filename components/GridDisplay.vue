@@ -1,25 +1,33 @@
 <template>
     <div class="grid-container" :style="css_styles">
-        <div
-            v-for="i in column_count * row_count"
-            @mouseenter="() => console.log(i)"
-            class="cell"
+        <Cell
+            v-for="(node, i) in nodes"
+            :key="i"
+            @click="() => {node.visited = true}"
+            :type="node.type"
+            :visited="node.visited"
         />
     </div>
 </template>
 
 <script setup lang="ts">
+import type Graph from '~/utils/graph';
+import type Node from "~/utils/node"
+
 
 let {
     column_count,
     row_count,
     gap_size,
-    cell_size
+    cell_size,
+    nodes
 } = defineProps<{
     column_count: number;
     row_count: number;
     gap_size: number;
     cell_size: number;
+    // graph: Graph;
+    nodes: Node[]
 }>();
 
 let css_styles = reactive({
@@ -59,14 +67,6 @@ watchEffect(() => {
         justify-content: center;
     }
 
-    .cell {
-        height: 100%;
-        width: 100%;
-        background: blue;
-    }
-
-    .cell:hover {
-        background: red;
-    }
+    
 
 </style>

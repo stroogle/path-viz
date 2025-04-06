@@ -1,26 +1,23 @@
-type MaybeNode = Node | null;
-
-export enum Direction {
-    TOP = 0,
-    RIGHT = 1,
-    BOTTOM = 2,
-    LEFT = 3
+export enum NodeType {
+    WALL,
+    OPEN
 }
 
-export class Node {
-
-    /**
-     * adjacent_nodes has the follow preconditions:
-     * * |adjacent_nodes| = 4
-     * * The order of adjacent nodes is stored as [TOP, RIGHT, BOTTOM, LEFT]
-     */
-    private adjacent_nodes: [MaybeNode, MaybeNode, MaybeNode, MaybeNode];
+export default class Node {
+    
+    public type: NodeType;
+    public visited: boolean;
 
     constructor() {
-        this.adjacent_nodes = [null, null, null, null];
+        this.type = NodeType.OPEN;
+        this.visited = false;
     }
 
-    get_adjacent(direction: Direction): MaybeNode {
-        return this.adjacent_nodes[direction]
+    public set_wall() {
+        this.type = NodeType.WALL;
+    }
+
+    public mark_visited() {
+        this.visited = true;
     }
 }

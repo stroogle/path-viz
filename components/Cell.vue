@@ -1,27 +1,44 @@
 <template>
     <div
-        class="w-[30px] h-[30px] hover:bg-red-500 border-opacity-100 border-2 border-blue-500"
-        :class="{
-            'bg-blue-500': props.state == 'active',
-            'bg-green-500': props.state == 'wall',
-            'bg-yellow-500': props.state == 'end',
-            'bg-purple-500': props.state == 'inactive'
-        }"
+        class="cell"
+        :data-type="type"
+        :data-visited="visited"
     />
 </template>
 
 <script setup lang="ts">
+import Node, {NodeType} from '~/utils/node';
 
-import {Node} from '~/utils/node';
 
-const props = defineProps<{
-    state: "active" | "wall" | "end" | "inactive"
+let {
+    visited,
+    type
+} = defineProps<{
+    visited: boolean,
+    type: NodeType
 }>();
-
-
 
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
+
+    .cell {
+        height: 100%;
+        width: 100%;
+        background: blue;
+        transition: all ease-in-out 500ms;
+    }
+
+    .cell[data-visited="true"] {
+        background: green;
+    }
+
+    .cell[data-type="0"] {
+        background: orange;
+    }
+
+    .cell:hover {
+        background: red;
+    }
 
 </style>
