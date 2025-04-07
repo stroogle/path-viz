@@ -1,6 +1,9 @@
 export enum NodeType {
     WALL,
-    OPEN
+    OPEN,
+    PATH,
+    START,
+    END
 }
 
 export default class Node {

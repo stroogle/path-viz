@@ -23,22 +23,45 @@ let {
 <style scoped>
 
     .cell {
+        --open-colour: blue;
+        --wall-colour: orange;
+        --path-colour: pink;
+        --visited-colour: green;
+        --start-colour: yellow;
+        --end-colour: red;
         height: 100%;
         width: 100%;
-        background: blue;
-        transition: all ease-in-out 500ms;
-    }
-
-    .cell[data-visited="true"] {
-        background: green;
+        transition: all ease-in-out 0ms;
     }
 
     .cell[data-type="0"] {
-        background: orange;
+        background: var(--wall-colour);
     }
 
+    .cell[data-type="1"] {
+        background: var(--open-colour);
+    }
+
+    .cell[data-visited="true"] {
+        background: var(--visited-colour);
+    }
+
+    .cell[data-type="2"] {
+        background: var(--path-colour);
+    }
+
+    .cell[data-type="3"] {
+        background: var(--start-colour);
+    }
+
+    .cell[data-type="4"] {
+        background: var(--end-colour);
+    }
+
+    
+
     .cell:hover {
-        background: red;
+        scale: 0.9;
     }
 
 </style>

@@ -1,12 +1,6 @@
 <template>
     <div class="grid-container" :style="css_styles">
-        <Cell
-            v-for="(node, i) in nodes"
-            :key="i"
-            @click="() => {node.visited = true}"
-            :type="node.type"
-            :visited="node.visited"
-        />
+        <slot />
     </div>
 </template>
 
@@ -19,15 +13,13 @@ let {
     column_count,
     row_count,
     gap_size,
-    cell_size,
-    nodes
+    cell_size
 } = defineProps<{
     column_count: number;
     row_count: number;
     gap_size: number;
     cell_size: number;
     // graph: Graph;
-    nodes: Node[]
 }>();
 
 let css_styles = reactive({

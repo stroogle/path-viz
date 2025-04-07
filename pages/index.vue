@@ -7,33 +7,21 @@
                 :row_count="row_count"
                 :cell_size="CELL_SIZE"
                 :gap_size="GRID_GAP"
-                :nodes="graph.nodes"
                 ref="grid_display"
-            />
-            <!-- <div v-for="(row, row_index) in maze.get_nodes()" class="flex">
+            >  
                 <Cell
-                    v-for="(column, col_index) in row"
-                    state="active"
-                    @click="setWall(row_index, col_index)"
+                    v-for="(node, i) in graph.nodes"
+                    :key="i"
+                    :type="node.type"
+                    :visited="node.visited"
+                    @click="use_tool(i)"
+                    @click.right.prevent="() => {
+                        graph.nodes[i].type = NodeType.WALL;
+                    }"
                 />
-            </div> -->
+            </GridDisplay>
         </div>
         <div class="max-w-[300px] w-1/4 bg-background h-full flex gap-4 flex-col p-4 rounded-md shadow-lg">
-            <Button @click="() => {colorMode.preference = 'light'}">
-                <Icon icon="fe:sunny-o" />
-                Light
-            </Button>
-            <Button @click="() => {colorMode.preference = 'dark'}">
-                <Icon icon="fe:moon" />
-                Dark
-            </Button>
-            <Button @click="() => {
-                reset_graph();
-                execute_algorithm();
-            }">
-                <Icon icon="fe:loop" />
-                Reset Grid
-            </Button>
             <Label for="sel">Algorithm</Label>
             <Select id="sel" v-model="algo">
                 <SelectTrigger>
@@ -48,9 +36,25 @@
                     <SelectItem value="bfs">
                     Bredth-First Search
                     </SelectItem>
+                    <SelectItem value="dij">
+                    Dijkstra's Search
+                    </SelectItem>
                 </SelectGroup>
                 </SelectContent>
             </Select>
+            <Label for="controls">Playback Controls</Label>
+            <Button id="controls" @click="() => {
+                execute_algorithm();
+            }">
+                <Icon icon="fe:play" />
+                Run
+            </Button>
+            <Button @click="() => {
+                reset_graph();
+            }">
+                <Icon icon="fe:loop" />
+                Reset Grid
+            </Button>
         </div>
     </div>
 </template>
@@ -63,6 +67,7 @@ import Graph from '~/utils/graph';
 import Node from '~/utils/node';
 import DFS from "~/utils/dfs";
 import BFS from "~/utils/bfs";
+import Dijkstra from "~/utils/dijkstra";
 import type Algorithm from "~/utils/algorithm";
 
 
@@ -114,21 +119,36 @@ function reset_graph() {
     row_count.value = r;
 }
 
-function execute_algorithm() {
+async function execute_algorithm() {
     let a: Algorithm;
 
     switch(algo.value) {
         case "dfs":
-            a = new DFS(graph, 0);
+            a = new DFS(graph);
             break
+        case "dij":
+            a = new Dijkstra(graph);
         default:
-            a = new BFS(graph, 0);
+            a = new BFS(graph);
     }
 
-    a.run()
+    await a.run();
+
+    a.highlight_path();
+}
+
+function use_tool(n: number) {
+    graph.nodes[graph.target].type = NodeType.OPEN;
+    graph.target = n;
+    graph.nodes[graph.target].type = NodeType.END;
 }
 
 </script>
 
 <style>
+
+body {
+    overflow: hidden;
+}
+
 </style>

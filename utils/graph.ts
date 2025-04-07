@@ -1,15 +1,23 @@
-import Node from "~/utils/node"
+import Node, { NodeType } from "~/utils/node"
 
 export default class Graph {
 
     nodes: Node[];
     height: number;
     width: number;
+    start: number;
+    target: number;
 
     constructor(nodes: Node[], height: number, width: number) {
         this.nodes = nodes;
         this.height = height;
         this.width = width;
+        this.start = 0;
+        this.target = 10;
+        if(nodes.length > 9) {
+            this.nodes[this.start].type = NodeType.START;
+            this.nodes[this.target].type = NodeType.END;
+        }
     }
 
     public get_node(node_index: any): Node {
@@ -34,22 +42,30 @@ export default class Graph {
 
     private get_node_above(node_index: number): number | undefined {
         if(node_index - this.width < 0) return undefined
-        return node_index - this.width;
+        let neighbour_index = node_index - this.width;
+        if(this.get_node(neighbour_index).type == NodeType.WALL) return undefined;
+        return neighbour_index;
     }
 
     private get_node_right(node_index: number): number | undefined {
         if((node_index + 1) % this.width == 0) return undefined
-        return node_index + 1;
+        let neighbour_index = node_index + 1;
+        if(this.get_node(neighbour_index).type == NodeType.WALL) return undefined;
+        return neighbour_index;
     }
 
     private get_node_below(node_index: number): number | undefined {
         if(node_index + this.width >= this.nodes.length) return undefined
-        return node_index + this.width;
+        let neighbour_index = node_index + this.width;
+        if(this.get_node(neighbour_index).type == NodeType.WALL) return undefined;
+        return neighbour_index;
     }
 
     private get_node_left(node_index: number): number | undefined {
         if(node_index % (this.width) == 0) return undefined
-        return node_index - 1;
+        let neighbour_index = node_index - 1;
+        if(this.get_node(neighbour_index).type == NodeType.WALL) return undefined;
+        return neighbour_index;
     }
 
     
